@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXTERNAL WILLPOWER | Execution Needs Pressure</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #111111;
+            --text: #ffffff;
+            --text-dim: #888888;
+            --accent: #ff3e3e;
+            --soft: #4ade80;
+            --firm: #facc15;
+            --hard: #ef4444;
+            --border: #222222;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- MANDATORY GATEKEEPER --- */
+        #gatekeeper {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .gate-box {
+            max-width: 500px;
+            border: 1px solid var(--border);
+            padding: 40px;
+            text-align: center;
+            background: var(--surface);
+        }
+        .gate-box h2 { font-family: 'Space+Grotesk', sans-serif; font-size: 1.8rem; margin-bottom: 20px; letter-spacing: -1px; }
+        .gate-box p { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 30px; }
+        .gate-box label { display: block; margin-bottom: 20px; font-size: 0.8rem; cursor: pointer; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: sticky; top: 0;
+            background: rgba(10, 10, 10, 0.95);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
+        }
+        .logo { font-family: 'Space+Grotesk', sans-serif; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-links { display: flex; gap: 20px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-dim); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a:hover { color: var(--text); }
+
+        /* --- LAYOUT --- */
+        section { padding: 100px 20px; max-width: 1100px; margin: 0 auto; display: none; }
+        section.active { display: block; animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1, h2, h3 { font-family: 'Space+Grotesk', sans-serif; font-weight: 900; text-transform: uppercase; line-height: 1; }
+        .text-accent { color: var(--accent); }
+
+        /* --- HERO --- */
+        .hero { text-align: center; padding: 150px 20px; }
+        .hero h1 { font-size: clamp(3rem, 10vw, 6rem); letter-spacing: -4px; margin-bottom: 20px; }
+        .hero p { max-width: 600px; margin: 0 auto 40px; color: var(--text-dim); font-size: 1.2rem; }
+        .cta-group { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+
+        /* --- BUTTONS --- */
+        .btn {
+            padding: 18px 40px; font-weight: 900; text-transform: uppercase; text-decoration: none;
+            display: inline-block; transition: 0.3s; cursor: pointer; border: none; font-size: 0.9rem;
+        }
+        .btn-primary { background: var(--text); color: #000; }
+        .btn-primary:hover { background: var(--accent); color: #fff; }
+        .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--text); }
+
+        /* --- PRICING --- */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 50px; }
+        .card { background: var(--surface); border: 1px solid var(--border); padding: 40px; position: relative; }
+        .card h3 { margin-bottom: 10px; font-size: 1.5rem; }
+        .card .price { font-size: 2.5rem; margin-bottom: 20px; }
+        .card ul { list-style: none; margin-bottom: 30px; color: var(--text-dim); font-size: 0.9rem; }
+        .card li { margin-bottom: 10px; }
+        .card li::before { content: "— "; color: var(--accent); }
+        
+        .card.soft { border-top: 5px solid var(--soft); }
+        .card.firm { border-top: 5px solid var(--firm); }
+        .card.hard { border-top: 5px solid var(--hard); background: #1a1111; }
+
+        /* --- FORMS --- */
+        .form-container { max-width: 600px; margin: 0 auto; background: var(--surface); padding: 40px; border: 1px solid var(--border); }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.7rem; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; color: var(--text-dim); }
+        input, select, textarea {
+            width: 100%; background: #000; border: 1px solid var(--border); padding: 15px; color: #fff; font-family: inherit; font-size: 1rem;
+        }
+        input:focus { border-color: var(--text); outline: none; }
+
+        /* --- UTILS --- */
+        .quote-block { border-left: 4px solid var(--accent); padding-left: 30px; margin: 40px 0; font-size: 1.5rem; font-style: italic; }
+        .step { margin-bottom: 40px; }
+        .step-num { font-size: 4rem; color: #222; font-weight: 900; line-height: 0.5; }
+        footer { border-top: 1px solid var(--border); padding: 80px 20px; text-align: center; }
+        .footer-quote { font-size: 1.5rem; font-weight: 900; margin-bottom: 20px; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 3.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="gatekeeper">
+        <div class="gate-box">
+            <h2>PROTOCOL ENTRY</h2>
+            <p>By proceeding, you acknowledge that your self-discipline has failed. You are entering a system of enforced accountability. No excuses. No emotional cushioning. Only execution.</p>
+            <label>
+                <input type="checkbox" id="agree"> I agree to all rules and consequences.
+            </label>
+            <button class="btn btn-primary" onclick="unlockSite()">Access System</button>
+        </div>
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">External Willpower</div>
+            <ul class="nav-links">
+                <li><a href="javascript:void(0)" onclick="nav('home')">Home</a></li>
+                <li><a href="javascript:void(0)" onclick="nav('concept')">Concept</a></li>
+                <li><a href="javascript:void(0)" onclick="nav('how')">How it Works</a></li>
+                <li><a href="javascript:void(0)" onclick="nav('pricing')">Modes</a></li>
+                <li><a href="javascript:void(0)" onclick="nav('chaser')">Chaser</a></li>
+                <li><a href="javascript:void(0)" onclick="nav('enforcer')">Enforcer</a></li>
+                <li><a href="javascript:void(0)" onclick="nav('contact')">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="active">
+        <div class="hero">
+            <h1>WILLPOWER FAILS.<br><span class="text-accent">SYSTEMS DON'T.</span></h1>
+            <p>If self-discipline worked, you wouldn’t be here. This is where excuses come to die and action becomes mandatory.</p>
+            <div class="cta-group">
+                <a href="javascript:void(0)" onclick="nav('chaser')" class="btn btn-primary">Become a Chaser</a>
+                <a href="javascript:void(0)" onclick="nav('enforcer')" class="btn btn-secondary">Become an Enforcer</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="concept">
+        <h1>Core Concept</h1>
+        <div class="quote-block">
+            "Knowing isn’t enough. Execution needs pressure."
+        </div>
+        <p style="margin-bottom: 20px;">External Willpower is a system that replaces unreliable self-discipline with enforced accountability. Most people fail because their willpower collapses under comfort and emotions. Consequences don't.</p>
+        <div class="grid-3">
+            <div class="card">
+                <h3>Temporary Emotions</h3>
+                <p>Motivation is a feeling. Feelings change. Our system ignores your feelings and focuses on your deadlines.</p>
+            </div>
+            <div class="card">
+                <h3>External Pressure</h3>
+                <p>Human beings are wired to respond to external consequences. We install a human Enforcer to watch your every move.</p>
+            </div>
+            <div class="card">
+                <h3>No Coaching</h3>
+                <p>No therapy. No pep talks. No advice. Only clear goals, defined rules, and real stakes.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="how">
+        <h1 style="margin-bottom: 50px;">The Protocol</h1>
+        <div class="step">
+            <div class="step-num">01</div>
+            <h3>Define Your Mission</h3>
+            <p>Chaser submits a specific goal, timeframe, and chooses an enforcement mode.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">02</div>
+            <h3>Deployment</h3>
+            <p>Matched with an Enforcer whose only job is to track your progress and apply pressure.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">03</div>
+            <h3>Evidence</h3>
+            <p>Daily proof submission is mandatory. If the Enforcer doesn't see it, you failed.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">04</div>
+            <h3>Judgment</h3>
+            <p>Successful completion leads to reward. Failure leads to lost bonds and recorded strikes.</p>
+        </div>
+    </section>
+
+    <section id="pricing">
+        <h1 style="text-align: center;">Modes of Enforcement</h1>
+        <p style="text-align: center; color: var(--text-dim);">All plans are for a 1-month enforcement period.</p>
+        <div class="grid-3">
+            <div class="card soft">
+                <h3>Soft Mode</h3>
+                <div class="price">₹2000</div>
+                <ul>
+                    <li>Gentle reminders</li>
+                    <li>Daily check-ins</li>
+                    <li>Encouragement-based</li>
+                    <li>Emotional support</li>
+                </ul>
+                <a href="javascript:void(0)" onclick="nav('chaser')" class="btn btn-secondary" style="width: 100%; text-align: center;">Select Soft</a>
+            </div>
+            <div class="card firm">
+                <h3>Firm Mode</h3>
+                <div class="price">₹3500</div>
+                <ul>
+                    <li>Strict follow-ups</li>
+                    <li>Fixed deadlines</li>
+                    <li>Missed task warnings</li>
+                    <li>Full disciplinary support</li>
+                </ul>
+                <a href="javascript:void(0)" onclick="nav('chaser')" class="btn btn-primary" style="width: 100%; text-align: center;">Select Firm</a>
+            </div>
+            <div class="card hard">
+                <h3>Hard Mode</h3>
+                <div class="price">₹5000</div>
+                <ul>
+                    <li>Zero-tolerance</li>
+                    <li>Brutally blunt confrontation</li>
+                    <li>Mandatory hard proof</li>
+                    <li>Miss = Instant Consequence</li>
+                </ul>
+                <div style="font-size: 0.7rem; color: var(--hard); font-weight: 900; margin-bottom: 20px;">
+                    + ₹5000 REFUNDABLE BOND REQUIRED
+                </div>
+                <a href="javascript:void(0)" onclick="nav('chaser')" class="btn btn-primary" style="background: var(--hard); border: none; width: 100%; text-align: center;">Commit to Hard</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="chaser">
+        <h1 style="text-align: center; margin-bottom: 40px;">Chaser Enrollment</h1>
+        <div class="form-container">
+            <form action="https://formspree.io/f/mnjjjwdw" method="POST">
+                <input type="hidden" name="type" value="Chaser Application">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Contact No (WhatsApp)</label>
+                    <input type="tel" name="contact" required>
+                </div>
+                <div class="form-group">
+                    <label>What is your Goal?</label>
+                    <textarea name="goal" rows="4" required placeholder="Be specific..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Period</label>
+                    <select name="period">
+                        <option>14 Days</option>
+                        <option>1 Month</option>
+                        <option>3 Months</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Enforcement Mode</label>
+                    <select name="mode">
+                        <option>Soft Mode (₹2000)</option>
+                        <option>Firm Mode (₹3500)</option>
+                        <option>Hard Mode (₹5000 + Bond)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Expected Enforcer Personality</label>
+                    <input type="text" name="enforcer_type" placeholder="e.g. Someone very strict">
+                </div>
+                <div class="form-group">
+                    <label>Payment Transaction Detail (Ref ID)</label>
+                    <input type="text" name="txn_id" required placeholder="Pay via UPI first">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit & Begin Enforcement</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="enforcer">
+        <h1 style="text-align: center; margin-bottom: 40px;">Apply as Enforcer</h1>
+        <div class="form-container">
+            <form action="https://formspree.io/f/mnjjjwdw" method="POST">
+                <input type="hidden" name="type" value="Enforcer Application">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Contact No</label>
+                    <input type="tel" name="contact" required>
+                </div>
+                <div class="form-group">
+                    <label>Daily Availability (Hours)</label>
+                    <input type="text" name="availability" required placeholder="e.g. 6am-8am and 9pm-10pm">
+                </div>
+                <div class="form-group">
+                    <label>Why are you a good Enforcer?</label>
+                    <textarea name="reason" rows="4" required placeholder="Explain your disciplinary philosophy..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-secondary" style="width: 100%;">Submit Application</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h1>Payment & Support</h1>
+        <div class="card" style="margin: 40px 0; border: 1px solid var(--firm);">
+            <h3>UPI ID: <span class="text-accent">surajshrivastava@fam</span></h3>
+            <p style="margin-top: 10px;">1. Select your mode.<br>2. Complete the payment via UPI.<br>3. Copy the Transaction ID.<br>4. Fill the Chaser form with the ID.<br>5. <strong>Upload screenshot on mail for verification.</strong></p>
+        </div>
+        <div class="grid-3">
+            <div>
+                <label>Direct Support</label>
+                <p>srivastavsuraj262@gmail.com</p>
+            </div>
+            <div>
+                <label>Instagram</label>
+                <p>@suryaa_2.o</p>
+            </div>
+            <div>
+                <label>Response Time</label>
+                <p>Expect a response within 6-12 hours of payment submission.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-quote">“Freedom is earned through discipline, not comfort.”</div>
+        <p style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px;">
+            External Willpower &copy; 2024 | Rule #1: No Excuses.
+        </p>
+    </footer>
+
+    <script>
+        // GATEKEEPER LOGIC
+        function unlockSite() {
+            const checkbox = document.getElementById('agree');
+            if (checkbox.checked) {
+                document.getElementById('gatekeeper').style.display = 'none';
+                document.body.style.overflow = 'auto';
+            } else {
+                alert("You must agree to the terms to proceed.");
+            }
+        }
+
+        // SPA NAVIGATION LOGIC
+        function nav(pageId) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(s => s.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Block scrolling until gate is passed
+        window.onload = () => {
+            document.body.style.overflow = 'hidden';
+        }
+    </script>
+</body>
+</html>
